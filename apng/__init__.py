@@ -30,12 +30,14 @@ def is_png(png):
 	"""
 	if isinstance(png, str):
 		with open(png, "rb") as f:
-			png = f.read(8)
+			png_header = f.read(8)
 			
 	if hasattr(png, "read"):
-		png = png.read(8)
+		position = png.tell()
+		png_header = png.read(8)
+		png.seek(position)
 		
-	return png[:8] == PNG_SIGN
+	return png_header[:8] == PNG_SIGN
 			
 def chunks_read(b):
 	"""Parse PNG bytes into different chunks, yielding (type, data). 
